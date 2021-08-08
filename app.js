@@ -6,16 +6,19 @@ const app = express()
 const port = config.APP_PORT
 const connection = require('./database/config');
 app.use(express.json())
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({
+    extended: false
+}))
+
+// Start DB Connection
 connection();
 
 const routes = require('./routes/routes')
 
-// Start DB Connection
 
 app.use('/', routes);
 
 
 app.listen(port, () => {
-    console.log("App is running at port 3000");
+    console.log(`App is running at port ${port}`);
 })
