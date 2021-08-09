@@ -22,6 +22,7 @@ BCRYPT_SALT=15
 ## API Reference
 
 ### POST: /register
+#### Registers a user
 
 ```javascript
 
@@ -51,6 +52,7 @@ BCRYPT_SALT=15
 ```
 
 ### POST: /login
+#### Login a user and generate JWT token
 
 ```javascript
 
@@ -70,6 +72,7 @@ BCRYPT_SALT=15
 ```
 
 ### PUT: /changepassword
+#### Update password of logged in user, using JWT token
 
 ```javascript
 
@@ -90,6 +93,7 @@ BCRYPT_SALT=15
 
 
 ### PUT: /updateprofile
+#### Update profile details of logged in user, using JWT token
 
 ```javascript
 
@@ -109,7 +113,27 @@ BCRYPT_SALT=15
 }
 ```
 
+### PUT: /updateprofilepicture
+#### Update profile photo of logged in user, using JWT token
+
+
+```javascript
+
+"mimeType": "multipart/form-data"
+"x-access-token": "JWT Token here"
+
+{
+    "key": "profile-picture"    
+}
+
+//Response
+{
+    "message": "Profile picture updated successfully."
+}
+```
+
 ### GET: /self
+#### Get details of logged in user
 
 ```javascript
 
@@ -128,6 +152,7 @@ BCRYPT_SALT=15
 
 
 ### GET: /users
+#### Get details of all the users
 
 ```javascript
 

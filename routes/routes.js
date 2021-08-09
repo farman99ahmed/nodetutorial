@@ -252,7 +252,7 @@ router.put('/updateprofile', [authenticate, validate], async (req, res) => {
     }
 });
 
-router.put('/updateprofilepicture', async (req, res) => {
+router.put('/updateprofilepicture', [authenticate, validate], async (req, res) => {
     await upload(req, res, async (error) => {
         if (error) {
             return res.status(500).json({
@@ -263,7 +263,7 @@ router.put('/updateprofilepicture', async (req, res) => {
                 await User.updateOne({
                     email: req.user.email
                 }, {
-                    profilepicture: req.file.path
+                    profile_picture: req.file.path
                 });
             } catch (error) {
                 return res.status(500).json({
