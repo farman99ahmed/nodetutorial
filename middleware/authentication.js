@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const User = require('../models/user')
 
-const authenticate = (req, res, next) => {
+const authenticate = async (req, res, next) => {
     try {
         const token = req.header('x-access-token');
         if (!token) {
@@ -10,8 +11,15 @@ const authenticate = (req, res, next) => {
             })
         } else {
             const decoded = jwt.verify(token, process.env.APP_KEY);
-            req.user = decoded;
-            next();
+            const user = await User.findOne({email: decoded.email}).select('email');
+            if (user){
+                req.user = user;
+                next();
+            } else {
+                return res.status(403).json({
+                    error: "Access denied. User is invalid."
+                })
+            }
         }
     } catch (error) {
         res.status(401).json({

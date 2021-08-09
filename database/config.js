@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-module.exports = async () => {
+const connection = async () => {
     try {
         const connectionParams = {
             useNewUrlParser: true,
@@ -14,3 +14,5 @@ module.exports = async () => {
         console.log("DB connection failed: ", error);
     }
 };
+
+module.exports = connection;
