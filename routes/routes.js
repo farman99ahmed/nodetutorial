@@ -11,15 +11,15 @@ const multer = require('multer');
 const path = require('path');
 
 const storage = multer.diskStorage({
-    destination: (req, file, callback) => {
-        callback(null, __dirname.replace('routes', '') + '../public/uploads/profile_pictures');
-    },
-    filename: (req, file, callback) => {
-        callback(null, path.join(__dirname, `img_${uuid.v4()}${path.extname(file.originalname)}`));
+    destination: function (req, file, callback) {
+        callback(null, path.join(__dirname, '../public/uploads'))
+      },
+    filename: function (req, file, callback) {
+      callback(null, uuid.v4() + path.extname(file.originalname))
     }
-});
+  })
 
-const upload = multer({
+const upload = multer({ 
     storage: storage,
     limits: {
         fileSize: 1000000
@@ -252,7 +252,7 @@ router.put('/updateprofile', [authenticate, validate], async (req, res) => {
     }
 });
 
-router.put('/updateprofilepicture', [authenticate, validate], async (req, res) => {
+router.put('/updateprofilepicture', async (req, res) => {
     await upload(req, res, async (error) => {
         if (error) {
             return res.status(500).json({
@@ -272,7 +272,7 @@ router.put('/updateprofilepicture', [authenticate, validate], async (req, res) =
             }
             res.status(200).json({
                 message: "Profile picture updated successfully."
-            })
+            });
         }
     });
 });
