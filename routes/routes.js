@@ -367,6 +367,21 @@ router.get('/articles', authenticate, async (req, res) => {
     }
 });
 
+router.get('/myarticles', authenticate, async (req, res) => {
+    try {
+        const articles = await Article.find({
+            author: req.user.email
+        }).sort();
+        res.status(200).json({
+            articles
+        });
+    } catch (error) {
+        res.status(400).json({
+            error: error.message
+        });
+    }
+});
+
 router.get('/', async (req, res) => {
     res.status(200).json({
         message: "This app works"
