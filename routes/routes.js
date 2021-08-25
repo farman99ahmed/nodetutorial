@@ -367,5 +367,11 @@ router.get('/articles', authenticate, async (req, res) => {
     }
 });
 
+router.get('/', async (req, res) => {
+    res.status(200).json({
+        message: "This app works"
+    });
+});
+
 
 module.exports = router;
