@@ -1,5 +1,6 @@
 require('dotenv').config();
 const User = require('../models/user');
+const Article = require('../models/article')
 const bcrypt = require('bcryptjs');
 const express = require('express');
 const router = express.Router();
@@ -9,6 +10,7 @@ const authenticate = require('../middleware/authentication');
 const validate = require('../middleware/validation');
 const multer = require('multer');
 const path = require('path');
+const user = require('../models/user');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -276,5 +278,94 @@ router.put('/updateprofilepicture', [authenticate, validate], async (req, res) =
         }
     });
 });
+
+router.post('/article', [validate, authenticate], async (req, res) => {
+    try {
+        const {
+            title,
+            body,
+            author
+        } = req.body;
+
+        if (!(title && body && author)) {
+            res.status(400).json({
+                error: "All inputs are required."
+            });
+        }
+        if (await User.findOne({
+                email: author
+            }) == null) {
+            res.status(400).json({
+                error: "This author does not exists."
+            })
+        } else {
+            const article = await Article.create({
+                _id: uuid.v4(),
+                title,
+                body,
+                author,
+            });
+    
+            res.status(201).json({
+                message: "Article created successfully",
+                id: article.id
+            });
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+});
+
+
+router.delete('/article', [validate, authenticate], async (req, res) => {
+    try {
+        const {
+            _id
+        } = req.body;
+
+        if (!(_id)) {
+            res.status(400).json({
+                error: "Article id is required."
+            });
+        }
+        if (await Article.findOne({
+                _id
+            }) == null) {
+            res.status(400).json({
+                error: "This article does not exists."
+            })
+        } else {
+            await Article.deleteOne({
+                _id
+            });
+    
+            res.status(201).json({
+                message: "Article deleted successfully",
+            });
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+});
+
+router.get('/articles', authenticate, async (req, res) => {
+    try {
+        const articles = await Article.find({}).sort();
+        res.status(200).json({
+            articles
+        });
+    } catch (error) {
+        res.status(400).json({
+            error: error.message
+        });
+    }
+});
+
 
 module.exports = router;
