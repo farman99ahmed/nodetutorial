@@ -283,17 +283,16 @@ router.post('/article', [validate, authenticate], async (req, res) => {
     try {
         const {
             title,
-            body,
-            author
+            body
         } = req.body;
 
-        if (!(title && body && author)) {
+        if (!(title && body)) {
             res.status(400).json({
                 error: "All inputs are required."
             });
         }
         if (await User.findOne({
-                email: author
+                email: req.user.email
             }) == null) {
             res.status(400).json({
                 error: "This author does not exists."
@@ -303,7 +302,7 @@ router.post('/article', [validate, authenticate], async (req, res) => {
                 _id: uuid.v4(),
                 title,
                 body,
-                author,
+                author: req.user.email
             });
     
             res.status(201).json({

@@ -12,7 +12,9 @@ const articleSchema = new mongoose.Schema({
     },
     author: {
         type: String,
-    },
-});
+    }
+    }, {
+        timestamps: true
+    });
 
 module.exports = mongoose.model('article', articleSchema)
