@@ -8,13 +8,13 @@ Login system created using Node, Express, Mongo. Uses JWT for token management a
 git clone https://github.com/farman99ahmed/nodetutorial.git
 cd nodetutorial
 npm install
-npm rundev
+npm run dev
 ```
 
 ## Environment Variable
 ```bash
 APP_KEY=
-APP_PORT= 3000
+APP_PORT=3000
 MONGO_URI=
 BCRYPT_SALT=15
 ```
