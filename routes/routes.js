@@ -15,13 +15,13 @@ const user = require('../models/user');
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
         callback(null, path.join(__dirname, '../public/uploads'))
-      },
+    },
     filename: function (req, file, callback) {
-      callback(null, uuid.v4() + path.extname(file.originalname))
+        callback(null, uuid.v4() + path.extname(file.originalname))
     }
-  })
+})
 
-const upload = multer({ 
+const upload = multer({
     storage: storage,
     limits: {
         fileSize: 1000000
@@ -333,7 +333,7 @@ router.post('/article', [validate, authenticate], async (req, res) => {
                 body,
                 author: req.user.email
             });
-    
+
             res.status(201).json({
                 message: "Article created successfully",
                 id: article.id
@@ -342,6 +342,37 @@ router.post('/article', [validate, authenticate], async (req, res) => {
 
     } catch (error) {
         res.status(500).json({
+            error: error.message
+        });
+    }
+});
+
+router.put('/updatearticle', [validate, authenticate], async (req, res) => {
+    try {
+        const {
+            _id,
+            title,
+            body
+        } = req.body;
+        if (!(_id && title && body)) {
+            res.status(400).json({
+                error: "ID, title and body is required."
+            });
+        }
+
+        if (await Article.updateOne({
+                _id
+            }, {
+                title,
+                body
+            })) {
+            res.status(200).json({
+                message: `Article ${_id} updated successfully`
+            });
+        }
+
+    } catch (error) {
+        res.status(400).json({
             error: error.message
         });
     }
@@ -369,7 +400,7 @@ router.delete('/article', [validate, authenticate], async (req, res) => {
             await Article.deleteOne({
                 _id
             });
-    
+
             res.status(201).json({
                 message: "Article deleted successfully",
             });
