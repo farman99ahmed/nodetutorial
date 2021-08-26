@@ -279,6 +279,35 @@ router.put('/updateprofilepicture', [authenticate, validate], async (req, res) =
     });
 });
 
+router.put('/updateprofilepictureurl', [authenticate, validate], async (req, res) => {
+    try {
+        const {
+            profile_picture
+        } = req.body;
+
+        if (!(profile_picture)) {
+            res.status(400).json({
+                error: "Profile picture is required."
+            });
+        }
+
+        await User.updateOne({
+            email: req.user.email
+        }, {
+            profile_picture
+        })
+
+        res.status(201).json({
+            message: "Picture updated successfully",
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+});
+
 router.post('/article', [validate, authenticate], async (req, res) => {
     try {
         const {
