@@ -181,7 +181,7 @@ router.get('/self', authenticate, async (req, res) => {
                 fullname: user.fullname,
                 email: user.email,
                 mobile: user.mobile,
-                profilepicture: user.profilepicture
+                profile_picture: user.profile_picture
             })
         }
     } catch (error) {
